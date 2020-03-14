@@ -4,8 +4,9 @@
 		2.reducer会在两个时候调用：1.初始化状态的时候，2.更新状态的时候
 */
 
-function demo (preSate=0,action){
+export default function (preSate=0,action){
 	const {type,data} = action
+	console.log(type,data);
 	let newState
 	switch (type) {
 		case 'increment': //如果是加
@@ -17,5 +18,4 @@ function demo (preSate=0,action){
 		default: //如果是初始化
 			return preSate
 	}
-	
 }
