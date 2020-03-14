@@ -9,9 +9,9 @@ import {createIncrementAction,createDecrementAction} from '../redux/count_action
 
 /* 
 	关于connect方法：
-			1.connect函数的返回值依然是一个函数，调用返回的那个函数要传入UI组件。
-			2.connect函数调用后所返回的那个函数继续调用就可以生成一个容器组件。
-			3.connect函数会接收到两个函数作为参数,这两个函数必须返回一个Object类型的对象
+			1.connect函数接收两个函数作为参数，第一个用于传递状态，第二个用于传递操作状态的方法。
+			2.connect函数接收两个函数作为参数，这两个函数必须都返回一个对象。
+			3.connect()()可以：1.生成容器组件；2.可以让UI组件和生成的那个容器组件建立起联系。
 */
 
 //将redux中所保存的状态，通过props传递给UI组件
