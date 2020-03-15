@@ -12,7 +12,9 @@ import {
 from '../redux/count_action_creator'
 
 export default connect(
-	state => ({number:state}),
+	//给UI组件传递状态
+	state => ({number:state}), 
+	//给UI组件传递操作状态的方法
 	{
 		increment:createIncrementAction,
 		decrement:createDecrementAction,
