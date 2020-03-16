@@ -10,5 +10,5 @@ export default combineReducers({
 /* 
 	关于combineReducers：
 		1.combineReducers可以汇总所有reducer，最终生成一个总的reducer交给store。
-		2.combineReducers传入的那个对象，就是redux中保存所有组件状态的那个大对象。
+		2.combineReducers传入的那个对象，就是redux中保存所有组件状态的那个【大对象】。
 */
