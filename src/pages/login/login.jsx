@@ -1,23 +1,27 @@
 import React, { Component } from 'react'
-import { Form, Input, Button } from 'antd';
-import axios from 'axios'
+import { Form, Input, Button,message} from 'antd';
+import {reqLogin} from '../../ajax'
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import logo from './imgs/logo.png'
 import './css/login.less'
-
+//从Form上获取Item(antd)
 const {Item} = Form
 
 export default class Login extends Component {
 
 	//表单提交的回调
-	onFinish = (values)=>{
-		console.log('表单提交了,获取到表单数据为：',values);
+	onFinish = async(values)=>{
 		const {username,password} = values
-		axios.post('http://localhost:3000/login',`username=${username}&password=${password}`).then(
-			response => {console.log(response.data);},
-			error => {console.log(error);}
-		)
+		let result = await reqLogin(username,password)
+		const {status,data,msg} = result
+		if(status===0){
+			message.success('登录成功！',1)
+			this.props.history.replace('/admin')
+		}else{
+			message.warning(msg,1)
+		}
 	}
+
 
 	//密码的自定义验证
 	pwdValidator = (rule,value)=>{
