@@ -9,8 +9,8 @@ const {Item} = Form
 export default class Login extends Component {
 
 	//表单提交的回调
-	onFinish = ()=>{
-		console.log('表单提交了');
+	onFinish = (values)=>{
+		console.log('表单提交了,获取到表单数据为：',values);
 	}
 
 	//密码的自定义验证
