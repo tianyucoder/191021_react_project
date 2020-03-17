@@ -23,3 +23,10 @@
 			3.处理了刷新页面，用户名丢失的问题 --- local
 			4.login与admin权限控制
 			5.Admin页面布局（使用antd的Layout组件）
+			6.Header的静态布局
+			7.screenfull库操作全屏
+			8.Header组件与redux的交互
+			9.Header组件退出登录
+			10.dayjs格式化时间戳
+			11.百度天气接口
+		
