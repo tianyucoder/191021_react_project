@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Form, Input, Button,message} from 'antd';
+import {connect} from 'react-redux'
 import {reqLogin} from '../../ajax'
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import logo from './imgs/logo.png'
@@ -7,7 +8,7 @@ import './css/login.less'
 //从Form上获取Item(antd)
 const {Item} = Form
 
-export default class Login extends Component {
+class Login extends Component {
 
 	//表单提交的回调
 	onFinish = async(values)=>{
@@ -93,3 +94,9 @@ export default class Login extends Component {
 		)
 	}
 }
+
+export default connect(
+	()=>({}), //传递状态给UI
+	{save:}//传递操作状态的方法给UI
+)(Login)
+
