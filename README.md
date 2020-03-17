@@ -22,3 +22,4 @@
 			2.用redux保存用户的信息(如果登录成功了)
 			3.处理了刷新页面，用户名丢失的问题 --- local
 			4.login与admin权限控制
+			5.Admin页面布局（使用antd的Layout组件）

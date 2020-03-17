@@ -8,7 +8,7 @@ export const createSaveUserAction = (userObj) => {
 }
 
 export const createDeleteUserAction = () => {
-	//向local中保存数据
+	//清空local中的数据
 	localStorage.clear()
 	return {type:DELETE_USER_INFO,data:''}
 }
