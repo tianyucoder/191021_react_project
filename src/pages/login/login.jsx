@@ -16,6 +16,7 @@ export default class Login extends Component {
 		const {status,data,msg} = result
 		if(status===0){
 			message.success('登录成功！',1)
+			console.log(data);
 			this.props.history.replace('/admin')
 		}else{
 			message.warning(msg,1)
