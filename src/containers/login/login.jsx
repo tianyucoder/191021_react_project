@@ -103,3 +103,14 @@ export default connect(
 	{save:createSaveUserAction}//传递操作状态的方法给UI
 )(Login)
 
+/* 
+	问题：一个组件要和redux交互，要做哪些事情？
+			1.引入connect（必须）
+			2.调用connect（必须），不在暴露原来的组件，要暴露connect()(UI组件)
+			3.给UI传递：(1).状态  (2).操作状态的方法
+				备注：
+							a.不一定非要传递状态，也不一定非要传递操作状态的方法
+							b.但是状态和方法总得传一个，否则没意义。
+							c.如果不传递操作状态的方法，就不用引入action
+*/
+
