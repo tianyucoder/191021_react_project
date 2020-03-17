@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Form, Input, Button,message} from 'antd';
 import {connect} from 'react-redux'
 import {reqLogin} from '../../ajax'
+import {createSaveUserAction} from '../../redux/actions/login'
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import logo from './imgs/logo.png'
 import './css/login.less'
@@ -17,7 +18,7 @@ class Login extends Component {
 		const {status,data,msg} = result
 		if(status===0){
 			message.success('登录成功！',1)
-			console.log(data);
+			this.props.save(data)
 			this.props.history.replace('/admin')
 		}else{
 			message.warning(msg,1)
@@ -97,6 +98,6 @@ class Login extends Component {
 
 export default connect(
 	()=>({}), //传递状态给UI
-	{save:}//传递操作状态的方法给UI
+	{save:createSaveUserAction}//传递操作状态的方法给UI
 )(Login)
 
