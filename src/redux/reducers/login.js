@@ -17,7 +17,7 @@ export default function(preState=initState,action){
 			const {user,token} = data
 			newState = {user,token,isLogin:true}
 			return newState
-		case DELETE_USER_INFO: //如果是保存用户
+		case DELETE_USER_INFO: //如果是删除用户
 			newState = {user:{},token:'',isLogin:false}
 			return newState
 		default:
