@@ -14,7 +14,7 @@ export const reqWeather = ()=>{
 			if(!err){
 				resolve(data.results[0].weather_data[0])
 			}else{
-				message.error(err)
+				message.error(err.message)
 			}
 		})
 	})
