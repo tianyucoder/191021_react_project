@@ -20,12 +20,10 @@ class Login extends Component {
 		if(status===0){
 			message.success('登录成功！',1)
 			this.props.save(data)//向redux中保存用户信息
-			this.props.history.replace('/admin')
 		}else{
 			message.warning(msg,1)
 		}
 	}
-
 
 	//密码的自定义验证
 	pwdValidator = (rule,value)=>{

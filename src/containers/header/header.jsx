@@ -18,11 +18,9 @@ class Header extends Component {
 	state = {
 		isFull:false,//标识是否全屏
 		date:dayjs().format('YYYY年 MM月 DD日 HH:mm:ss'),
-		weatherInfo:{
-			dayPictureUrl:'',
-			temperature:'',
-			weather:''
-		}
+		dayPictureUrl:'', //天气图片
+		temperature:'',//温度
+		weather:''//天气
 	}
 
 	fullScreen = ()=>{

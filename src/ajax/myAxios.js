@@ -17,6 +17,7 @@ axios.interceptors.request.use((config)=>{
 axios.interceptors.response.use(
 	response => {return response.data},
 	err => {
+		//1.服务器没给响应 2.服务器返回的状态码不是2开头
 		message.error(err.message)
 		return new Promise(()=>{})
 	}
