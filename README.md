@@ -31,5 +31,17 @@
 			11.百度天气接口
 
 ### day05
+			1.左侧导航的静态布局(上方的logo+文字+Menu组件)
+			2.分析Menu组件的API，整体结构（<Item>、<SubMenu/>）
+			3.根据菜单配置文件自动创建菜单(递归)
+			4.完成刷新页面可以：自动选中、自动展开
+				靠地址，用到了Menu组件的两个配置：selectedKeys、defaultOpenKeys
+			5.处理重新登录后，不选中“首页”的问题：使用selectedKeys替换defaultSelectedKeys
+			6.使用redux保存左侧所选菜单的标题、Header组件从redux中读取标题
+			7.处理刷新页面Header组件展示的标题丢失问题，解决：编写getTitle方法，计算标题名
+			8.处理重新登录后，依然残留之前保存的title问题：退出登录时清空redux里的title
+			9.处理重新登录后，Header中展示“首页”的问题，解决：if(key === 'admin') key = 'home'
+			10.token的工作原理及具体编码，备注：axios的请求拦截器，让所有请求都自动携带token
+
 			
 		
