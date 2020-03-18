@@ -78,7 +78,7 @@ class Header extends Component {
 				</div>
 				<div className="header-bottom">
 					<div className="bottom-left">
-						<h1>首页</h1>
+						<h1>{this.props.title}</h1>
 					</div>
 					<div className="bottom-right">
 						<span>{date} </span>
@@ -92,7 +92,10 @@ class Header extends Component {
 }
 
 export default connect(
-	(state)=>({username:state.userInfo.user.username}),//传递状态
+	(state)=>({
+		username:state.userInfo.user.username,
+		title:state.title
+	}),//传递状态
 	{
 		logout:createDeleteUserAction
 	}//传递操作状态的方法
