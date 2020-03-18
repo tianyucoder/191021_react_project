@@ -10,6 +10,7 @@ import {
 } from '@ant-design/icons';
 import {reqWeather} from '../../ajax'
 import {createDeleteUserAction} from '../../redux/actions/login'
+import {createSaveTitleAction} from '../../redux/actions/header'
 import './css/header.less'
 const {confirm} = Modal;
 
@@ -37,6 +38,7 @@ class Header extends Component {
 			cancelText:'取消',
 			onOk:()=> { //确认按钮的回调
 				this.props.logout()
+				this.props.deleteTitle('')
 			},
 		});
 	}
@@ -97,6 +99,7 @@ export default connect(
 		title:state.title
 	}),//传递状态
 	{
-		logout:createDeleteUserAction
+		logout:createDeleteUserAction,
+		deleteTitle:createSaveTitleAction
 	}//传递操作状态的方法
 )(Header)

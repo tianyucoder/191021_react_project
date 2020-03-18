@@ -10,6 +10,7 @@ const {SubMenu,Item} = Menu;
 
 class LeftNav extends Component {
 
+	//创建菜单的方法
 	createMenu = (menuArr)=>{
 		return menuArr.map((menuObj)=>{
 			if(!menuObj.children){
@@ -39,7 +40,38 @@ class LeftNav extends Component {
 		})
 	}
 
+	//根据菜单的key计算菜单的title
+	getTitleByPath = ()=>{
+		console.log('redux中没有title了，只能靠getTitleByPath计算了');
+		//根据当前浏览器中的路径的最后一个单词，去菜单数组中匹配，计算出title
+		let key = this.props.location.pathname.split('/').reverse()[0]
+		if(key === 'admin') key = 'home'
+		console.log(key);
+		let title = ''
+		menus.forEach((menuObj)=>{
+			//1.若当前的这个菜单对象有children
+			if(menuObj.children instanceof Array){
+				let result = menuObj.children.find((childrenObj)=>{
+					return childrenObj.key === key
+				})
+				if(result) title = result.title
+			}else{//2.若当前的这个菜单对象无children
+				if(menuObj.key === key) title = menuObj.title
+			}
+		})
+		this.props.saveTitle(title)
+	}
+
+	componentDidMount(){
+		//console.log('left---componentDidMount');//1次
+		//如果redux中没有了title了(用户刷新页面)，用该方法计算
+		if(!this.props.title){
+			this.getTitleByPath()
+		}
+	}
+
 	render() {
+		//console.log('left--render');
 		const currentPathArr = this.props.location.pathname.split('/')
 		const currentKey = currentPathArr.reverse()[0]
 		
@@ -65,7 +97,7 @@ class LeftNav extends Component {
 }
 
 export default connect(
-	()=>({}),//传递状态
+	(state)=>({title:state.title}),//传递状态
 	{
 		saveTitle:createSaveTitleAction
 	}//传递操作状态的方法
