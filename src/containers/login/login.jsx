@@ -5,7 +5,7 @@ import {Redirect} from 'react-router-dom'
 import {reqLogin} from '../../ajax'
 import {createSaveUserAction} from '../../redux/actions/login'
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import logo from './imgs/logo.png'
+import logo from '../../static/imgs/logo.png'
 import './css/login.less'
 //从Form上获取Item(antd)
 const {Item} = Form

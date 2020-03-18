@@ -3,6 +3,7 @@ import {Redirect} from 'react-router-dom'
 import {createDeleteUserAction} from '../../redux/actions/login'
 import {connect} from 'react-redux'
 import {Layout} from 'antd';
+import LeftNav from '../left_nav/left_nav'
 import Header from '../header/header'
 import './css/admin.less'
 const {Footer,Sider,Content} = Layout;
@@ -13,7 +14,9 @@ class Admin extends Component {
 		if(!this.props.isLogin) return <Redirect to="/login"/>
 		return (
 			<Layout className="admin-root">
-				<Sider className="admin-sider">Sider</Sider>
+				<Sider className="admin-sider">
+					<LeftNav/>
+				</Sider>
 				<Layout>
 					<Header/>
 					<Content>Content</Content>
