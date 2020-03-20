@@ -5,7 +5,7 @@ export default function(preState=[],action){
 	let newState
 	switch (type) {
 		case SAVE_CATEGORY_LIST:
-			newState = [...data]
+			newState = [...data.reverse()]
 			return newState
 		default:
 			return preState

@@ -1,6 +1,7 @@
 import React,{Component} from 'react'
-import {Card,Button,Table,Modal,Form,Input} from 'antd';
+import {Card,Button,Table,Modal,Form,Input,message} from 'antd';
 import {connect} from 'react-redux'
+import {reqAddCategory} from '../../ajax'
 import {createSaveCategoryAsyncAction} from '../../redux/actions/category'
 import {PlusCircleOutlined} from '@ant-design/icons';
 
@@ -18,14 +19,24 @@ class Category extends Component {
 	};
 	
 	//确认按钮的回调
-	handleOk = () => {
-    console.log('你点击了确定');
-    this.setState({visible: false});
+	handleOk = async() => {
+		const {categoryName} = this.refs.categoryForm.getFieldsValue() //获取用户输入
+		if(!categoryName.trim()) {message.warning('分类名不能为空');return}//校验
+		let result = await reqAddCategory(categoryName)//请求添加分类
+		const {status,msg} = result//获取服务器返回的数据
+		if(status === 0){//如果添加的业务逻辑是成功的
+			message.success('添加商品成功')
+			this.props.saveCategory() //从服务器重新获取最新的分类数据
+			this.setState({visible: false});//隐藏弹窗
+			this.refs.categoryForm.resetFields()//重置表单
+		}else{
+			message.warning(msg)
+		}
 	}
 	
 	//取消按钮的回调
 	handleCancel = () => {
-    console.log('你点击了取消');
+		this.refs.categoryForm.resetFields() //重置表单
     this.setState({visible: false});
   }
 
@@ -44,11 +55,11 @@ class Category extends Component {
 			},
 			{
 				title: '操作',
-				//dataIndex: 'caozuo',
+				//dataIndex: 'name',
 				key: 'ft789u0iiuyg8opk',
 				align:'center',
 				width:'15%',
-				render:()=><Button type="link" href="">修改分类</Button>
+				render:(item)=><Button onClick={()=>{this.showModal()}} type="link">修改分类</Button>
 			},
 		];
 		return (
@@ -82,12 +93,12 @@ class Category extends Component {
 					okText='确认'
 					cancelText='取消'
         >
-          <Form>
+          <Form ref="categoryForm">
 						<Item
 							name="categoryName"
 							rules={[{required:true,message:'分类名必须输入'}]}
 						>
-							<Input/>
+							<Input placeholder="请输入分类名"/>
 						</Item>
 					</Form>
         </Modal>
