@@ -1,7 +1,7 @@
 import React,{Component} from 'react'
 import {Card,Button,Table,Modal,Form,Input,message} from 'antd';
 import {connect} from 'react-redux'
-import {reqAddCategory} from '../../ajax'
+import {reqAddCategory,reqUpdateCategory} from '../../ajax'
 import {createSaveCategoryAsyncAction} from '../../redux/actions/category'
 import {PlusCircleOutlined} from '@ant-design/icons';
 
@@ -16,17 +16,13 @@ class Category extends Component {
 	//展示弹窗
 	showModal = (categoryObj) => {
 		const {_id,name} = categoryObj //尝试着获取_id和name，若_id和name均存在，那么是修改分类
-		console.log(_id,name);
 		if(_id && name){
 			//能进入此判断，就以为是修改操作
-			this.name = name
-			this._id = _id
-			this.isUpdate = true
-			if(this.refs.categoryForm){
-				console.log('@@@');
-				this.refs.categoryForm.setFieldsValue({categoryName:name})
-			}
-			console.log(this._id,this.name);
+			this.name = name //在实例身上缓存要修改分类的名字
+			this._id = _id//在实例身上缓存要修改分类的id
+			this.isUpdate = true //实例身上标识：更新
+			const {categoryForm} = this.refs //获取Form节点(第一次获取不到)
+			if(categoryForm) categoryForm.setFieldsValue({categoryName:name})//第一次以后靠这行代码回显数据
 		}
     this.setState({visible: true}); //更改状态，展示弹窗
 	};
@@ -35,13 +31,14 @@ class Category extends Component {
 	handleOk = async() => {
 		const {categoryName} = this.refs.categoryForm.getFieldsValue() //获取用户输入
 		if(!categoryName.trim()) {message.warning('分类名不能为空');return}//校验
-		let result = await reqAddCategory(categoryName)//请求添加分类
+		let result //提前定义好一个接受服务器返回数据的变量
+		if(this.isUpdate) result = await reqUpdateCategory(this._id,categoryName)//请求修改分类
+		else result = await reqAddCategory(categoryName)//请求添加分类
 		const {status,msg} = result//获取服务器返回的数据
 		if(status === 0){//如果添加的业务逻辑是成功的
-			message.success('添加商品成功')
+			message.success(this.isUpdate ? '修改分类成功' : '新增分类成功')
 			this.props.saveCategory() //从服务器重新获取最新的分类数据
-			this.setState({visible: false});//隐藏弹窗
-			this.refs.categoryForm.resetFields()//重置表单
+			this.handleCancel()
 		}else{
 			message.warning(msg)
 		}
@@ -51,6 +48,8 @@ class Category extends Component {
 	handleCancel = () => {
 		this.refs.categoryForm.setFieldsValue({categoryName:''})
 		this.isUpdate = false //重置为新增
+		this.name = ''
+		this._id = ''
     this.setState({visible: false});//关闭弹窗
   }
 
