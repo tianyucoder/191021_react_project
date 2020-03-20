@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import {reqAddCategory,reqUpdateCategory} from '../../ajax'
 import {createSaveCategoryAsyncAction} from '../../redux/actions/category'
 import {PlusCircleOutlined} from '@ant-design/icons';
+import {PAGE_SIZE} from '../../config'
 
 const {Item} = Form
 
@@ -91,7 +92,7 @@ class Category extends Component {
 						dataSource={this.props.categoryList} //配置表格数据
 						columns={columns} //配置表格的列
 						pagination={{ //分页器
-							pageSize:4, //每页展示几条数据
+							pageSize:PAGE_SIZE, //每页展示几条数据
 							showQuickJumper:true //快速跳转
 						}}
 						rowKey="_id" //告诉Table组件展示数据时，以数据的_id属性作为唯一的key
