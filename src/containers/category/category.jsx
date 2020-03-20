@@ -14,7 +14,20 @@ class Category extends Component {
 	};
 
 	//展示弹窗
-	showModal = () => {
+	showModal = (categoryObj) => {
+		const {_id,name} = categoryObj //尝试着获取_id和name，若_id和name均存在，那么是修改分类
+		console.log(_id,name);
+		if(_id && name){
+			//能进入此判断，就以为是修改操作
+			this.name = name
+			this._id = _id
+			this.isUpdate = true
+			if(this.refs.categoryForm){
+				console.log('@@@');
+				this.refs.categoryForm.setFieldsValue({categoryName:name})
+			}
+			console.log(this._id,this.name);
+		}
     this.setState({visible: true}); //更改状态，展示弹窗
 	};
 	
@@ -36,8 +49,9 @@ class Category extends Component {
 	
 	//取消按钮的回调
 	handleCancel = () => {
-		this.refs.categoryForm.resetFields() //重置表单
-    this.setState({visible: false});
+		this.refs.categoryForm.setFieldsValue({categoryName:''})
+		this.isUpdate = false //重置为新增
+    this.setState({visible: false});//关闭弹窗
   }
 
 	componentDidMount(){
@@ -59,7 +73,7 @@ class Category extends Component {
 				key: 'ft789u0iiuyg8opk',
 				align:'center',
 				width:'15%',
-				render:(item)=><Button onClick={()=>{this.showModal()}} type="link">修改分类</Button>
+				render:(item)=><Button onClick={()=>{this.showModal(item)}} type="link">修改分类</Button>
 			},
 		];
 		return (
@@ -74,31 +88,36 @@ class Category extends Component {
 					</Button>}
 				>
 					<Table 
-						bordered
-						dataSource={this.props.categoryList} 
-						columns={columns} 
-						pagination={{
-							pageSize:4,
-							showQuickJumper:true
+						bordered //表格边框效果
+						dataSource={this.props.categoryList} //配置表格数据
+						columns={columns} //配置表格的列
+						pagination={{ //分页器
+							pageSize:4, //每页展示几条数据
+							showQuickJumper:true //快速跳转
 						}}
-						rowKey="_id"
+						rowKey="_id" //告诉Table组件展示数据时，以数据的_id属性作为唯一的key
 					/>
 				</Card>
 				{/* 以后要展示的弹窗在下面 */}
 				<Modal
-          title="新增分类"
-          visible={this.state.visible}
-          onOk={this.handleOk}
-					onCancel={this.handleCancel}
-					okText='确认'
-					cancelText='取消'
+          title={this.isUpdate ? '修改分类' : '新增分类'} //弹窗的标题
+          visible={this.state.visible} //是否展示弹窗
+          onOk={this.handleOk} //确认的回调
+					onCancel={this.handleCancel} //取消的回调
+					okText='确认' //确认的文字
+					cancelText='取消' //取消的文字
         >
-          <Form ref="categoryForm">
+					<Form 
+						ref="categoryForm"
+						initialValues={{
+							categoryName:this.name
+						}}
+					>
 						<Item
 							name="categoryName"
 							rules={[{required:true,message:'分类名必须输入'}]}
 						>
-							<Input placeholder="请输入分类名"/>
+							<Input ref="demo" placeholder="请输入分类名"/>
 						</Item>
 					</Form>
         </Modal>
