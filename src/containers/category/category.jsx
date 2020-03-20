@@ -1,26 +1,40 @@
 import React,{Component} from 'react'
-import {Card,Button,Table} from 'antd';
+import {Card,Button,Table,Modal,Form,Input} from 'antd';
+import {connect} from 'react-redux'
+import {createSaveCategoryAsyncAction} from '../../redux/actions/category'
 import {PlusCircleOutlined} from '@ant-design/icons';
 
+const {Item} = Form
 
-export default class Category extends Component {
+class Category extends Component {
+
+	state = {
+		visible: false //控制弹窗显示与隐藏
+	};
+
+	//展示弹窗
+	showModal = () => {
+    this.setState({visible: true}); //更改状态，展示弹窗
+	};
+	
+	//确认按钮的回调
+	handleOk = () => {
+    console.log('你点击了确定');
+    this.setState({visible: false});
+	}
+	
+	//取消按钮的回调
+	handleCancel = () => {
+    console.log('你点击了取消');
+    this.setState({visible: false});
+  }
+
+	componentDidMount(){
+		//将商品分类信息存入redux
+		this.props.saveCategory()
+	}
 
 	render() {
-		const dataSource = [
-			{
-				key: '1',
-				name: '测试分类一',
-			},
-			{
-				key: '2',
-				name: '测试分类二',
-			},
-			{
-				key: '3',
-				name: '测试分类三',
-			},
-		];
-
 		//columns是配置Table列的，是一个相当重要的配置项
 		const columns = [
 			{
@@ -38,13 +52,56 @@ export default class Category extends Component {
 			},
 		];
 		return (
-			<Card extra={<Button type="primary"><PlusCircleOutlined/>添加</Button>}>
-				<Table 
-					bordered
-					dataSource={dataSource} 
-					columns={columns} 
-				/>
-			</Card>
+			<div>
+				<Card 
+					extra={
+					<Button 
+							type="primary" 
+							onClick={this.showModal}
+					>
+						<PlusCircleOutlined/>添加
+					</Button>}
+				>
+					<Table 
+						bordered
+						dataSource={this.props.categoryList} 
+						columns={columns} 
+						pagination={{
+							pageSize:4,
+							showQuickJumper:true
+						}}
+						rowKey="_id"
+					/>
+				</Card>
+				{/* 以后要展示的弹窗在下面 */}
+				<Modal
+          title="新增分类"
+          visible={this.state.visible}
+          onOk={this.handleOk}
+					onCancel={this.handleCancel}
+					okText='确认'
+					cancelText='取消'
+        >
+          <Form>
+						<Item
+							name="categoryName"
+							rules={[{required:true,message:'分类名必须输入'}]}
+						>
+							<Input/>
+						</Item>
+					</Form>
+        </Modal>
+			</div>
 		)
 	}
+
 }
+
+export default connect(
+	(state)=>({
+		categoryList:state.categoryList
+	}),//传递状态
+	{
+		saveCategory:createSaveCategoryAsyncAction
+	} // 传递操作状态的方法
+)(Category)
