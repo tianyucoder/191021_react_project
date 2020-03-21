@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Card,Button,Select,Input,Table, message} from 'antd';
-import {reqProductList,reqChangeProdStatus} from '../../ajax'
+import {reqProductList,reqChangeProdStatus,reqSearchProduct} from '../../ajax'
 import {PAGE_SIZE} from '../../config'
 import {SearchOutlined,PlusCircleOutlined} from '@ant-design/icons';
 
@@ -11,7 +11,10 @@ export default class Product extends Component {
 	state = {
 		productList:[],
 		total:0,
-		isLoading:false
+		isLoading:false,
+		searchType:'productName',
+		keyWord:'',
+		current:1
 	}
 
 	changeStatus = async({_id,status})=>{
@@ -34,8 +37,14 @@ export default class Product extends Component {
 	}
 
 	getProductList = async(number)=>{
-		this.setState({isLoading:true})
-		let result = await reqProductList(number,PAGE_SIZE)
+		this.setState({isLoading:true,current:number})
+		let result 
+		if(this.isSearch){
+			const {keyWord,searchType} = this.state
+			result = await reqSearchProduct(searchType,keyWord,number,PAGE_SIZE)
+		}else{
+			result = await reqProductList(number,PAGE_SIZE)
+		}
 		const {status,data,msg} = result
 		if(status === 0){
 			const {total,pages,list} = data
@@ -110,12 +119,12 @@ export default class Product extends Component {
 			<Card 
 				title={
 					<div>
-						<Select defaultValue="prodcutName">
-							<Option value="prodcutName">按名称搜索</Option>
-							<Option value="prodcutDesc">按描述搜索</Option>
+						<Select onChange={(value)=>{this.setState({searchType:value})}} defaultValue="productName">
+							<Option value="productName">按名称搜索</Option>
+							<Option value="productDesc">按描述搜索</Option>
 						</Select>
-						<Input style={{width:'20%',marginLeft:'10px',marginRight:'10px'}}/>
-						<Button type="primary"><SearchOutlined/>搜索</Button>
+						<Input onChange={(event)=>{this.setState({keyWord:event.target.value})}} style={{width:'20%',marginLeft:'10px',marginRight:'10px'}}/>
+						<Button onClick={()=>{this.isSearch = true;this.getProductList(1)}} type="primary"><SearchOutlined/>搜索</Button>
 					</div>
 				}
 				extra={<Button type="primary"><PlusCircleOutlined/>添加商品</Button>}
@@ -129,7 +138,8 @@ export default class Product extends Component {
 					pagination={{ //分页器
 						pageSize:PAGE_SIZE, //每页展示几条数据
 						total:this.state.total, //数据总数
-						onChange:(number)=>{this.getProductList(number)}
+						onChange:(number)=>{this.getProductList(number)},
+						current:this.state.current
 					}}
 				/>
 			</Card>
