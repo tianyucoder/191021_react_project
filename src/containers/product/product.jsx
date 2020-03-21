@@ -60,12 +60,13 @@ export default class Product extends Component {
 	}
 
 	componentDidMount(){
+		//初始化加载商品列表
 		this.getProductList(1)
 	}
 
 	render() {
 		const dataSource = this.state.productList
-		
+		//表格列配置(重要！！)
 		const columns = [
 			{
 				title: '商品名称',
@@ -141,8 +142,8 @@ export default class Product extends Component {
 					pagination={{ //分页器
 						pageSize:PAGE_SIZE, //每页展示几条数据
 						total:this.state.total, //数据总数
-						onChange:(number)=>{this.getProductList(number)},
-						current:this.state.current
+						onChange:(number)=>{this.getProductList(number)},//页码改变的回调
+						current:this.state.current //当前在哪一页
 					}}
 				/>
 			</Card>
