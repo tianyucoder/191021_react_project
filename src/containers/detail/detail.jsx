@@ -79,7 +79,7 @@ class Detail extends Component {
 						<span className="detail-title">商品图片：</span>
 						{
 							imgs.map((imgName)=>{
-								return <img src={`/upload/${imgName}`} alt=""/>
+								return <img key={imgName} src={`/upload/${imgName}`} alt=""/>
 							})
 						}
 					</Item>
