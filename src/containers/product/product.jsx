@@ -15,22 +15,21 @@ export default class Product extends Component {
 	}
 
 	changeStatus = async({_id,status})=>{
-		if(status === 1) status = 2
-		else status = 1
-		let result = await reqChangeProdStatus(_id,status)
-		const {msg} = result
-		const _status = result.status
-		if(_status === 0){
-			message.success('操作成功！')
-			let arr = [...this.state.productList]
-			arr.forEach((item)=>{
+		if(status === 1) status = 2 //若之前为上架，改为下架
+		else status = 1 //若之前为下架，改为上架
+		let result = await reqChangeProdStatus(_id,status) //请求更新状态
+		if(result.status === 0){ //如果操作是成功的
+			message.success('操作成功！') //提示成功
+			let arr = [...this.state.productList] //获取原状态的商品列表
+			arr.forEach((item)=>{ 
 				if(item._id === _id){
 					item.status = status
 				}
 			})
+			//更新状态
 			this.setState({productList:arr})
 		}else{
-			message.error(msg)
+			message.error(result.msg)
 		}
 	}
 
