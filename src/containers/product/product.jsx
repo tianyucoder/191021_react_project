@@ -9,12 +9,12 @@ const {Option} = Select;
 export default class Product extends Component {
 
 	state = {
-		productList:[],
-		total:0,
-		isLoading:false,
-		searchType:'productName',
-		keyWord:'',
-		current:1
+		productList:[],//商品列表
+		total:0,//商品总数
+		isLoading:false,//是否处于加载中
+		searchType:'productName',//搜索类型
+		keyWord:'',//搜索关键词
+		current:1//当前页码
 	}
 
 	changeStatus = async({_id,status})=>{
@@ -37,14 +37,17 @@ export default class Product extends Component {
 	}
 
 	getProductList = async(number)=>{
-		this.setState({isLoading:true,current:number})
-		let result 
+		this.setState({isLoading:true,current:number}) //1.改为加载中 2.维护当前点击的页码
+		let result //定义好result接收服务器返回数据
 		if(this.isSearch){
+			//如果是搜索
 			const {keyWord,searchType} = this.state
 			result = await reqSearchProduct(searchType,keyWord,number,PAGE_SIZE)
 		}else{
+			//如果是初始化
 			result = await reqProductList(number,PAGE_SIZE)
 		}
+		//从result中获取数据
 		const {status,data,msg} = result
 		if(status === 0){
 			const {total,pages,list} = data
