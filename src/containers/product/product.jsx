@@ -106,14 +106,14 @@ export default class Product extends Component {
 			},
 			{
 				title: '操作',
-				//dataIndex: 'zhuangtai',
+				dataIndex: '_id',
 				key: 'caozuo',
 				align:'center',
-				render:()=> (
+				render:(id)=> (
 					<div>
-						<Button type="link">详情</Button>
+						<Button onClick={()=>{this.props.history.push(`/admin/prod_about/product/detail/${id}`)}} type="link">详情</Button>
 						<br/>
-						<Button type="link">修改</Button>
+						<Button onClick={()=>{this.props.history.push(`/admin/prod_about/product/update/${id}`)}} type="link">修改</Button>
 					</div>
 				)
 			},
@@ -131,7 +131,13 @@ export default class Product extends Component {
 						<Button onClick={()=>{this.isSearch = true;this.getProductList(1)}} type="primary"><SearchOutlined/>搜索</Button>
 					</div>
 				}
-				extra={<Button type="primary"><PlusCircleOutlined/>添加商品</Button>}
+				extra={
+					<Button 
+						onClick={()=>{this.props.history.push('/admin/prod_about/product/add')}} 
+						type="primary"
+					>
+							<PlusCircleOutlined/>添加商品
+					</Button>}
 			>
 				<Table
 					bordered
