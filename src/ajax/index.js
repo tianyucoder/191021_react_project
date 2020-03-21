@@ -30,7 +30,9 @@ export const reqProductList = (pageNum,pageSize) => 	myAxios.get('/manage/produc
 //请求商品上架、下架
 export const reqChangeProdStatus = (productId,status) => myAxios.post('/manage/product/updateStatus',{productId,status})
 //请求搜索商品
-export const reqSearchProduct = (searchType,keyWord,pageNum,pageSize) => 
-	myAxios.get('/manage/product/search',{params:{[searchType]:keyWord,pageNum,pageSize}})
+export const reqSearchProduct = (searchType,keyWord,pageNum,pageSize) => 	myAxios.get('/manage/product/search',{params:{[searchType]:keyWord,pageNum,pageSize}})
+//根据商品id获取商品详细信息
+export const reqProductInfoById = (productId) => myAxios.get('/manage/product/info',{params:{productId}})
+//根据分类的id请求分类信息
 
 
