@@ -24,12 +24,11 @@ export const reqCategoryList = () => myAxios.get('/manage/category/list')
 //请求添加一个分类
 export const reqAddCategory = (categoryName) => myAxios.post('/manage/category/add',{categoryName})
 //请求修改分类名称
-export const reqUpdateCategory = (categoryId,categoryName) => 
-	myAxios.post('/manage/category/update',{categoryId,categoryName})
+export const reqUpdateCategory = (categoryId,categoryName) => myAxios.post('/manage/category/update',{categoryId,categoryName})
 //请求商品列表(分页)
-export const reqProductList = (pageNum,pageSize) => 
-	myAxios.get('/manage/product/list',{params:{pageNum,pageSize}})
-
+export const reqProductList = (pageNum,pageSize) => 	myAxios.get('/manage/product/list',{params:{pageNum,pageSize}})
+//请求商品上架、下架
+export const reqChangeProdStatus = (productId,status) => myAxios.post('/manage/product/updateStatus',{productId,status})
 
 
 

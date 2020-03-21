@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import {Card,Button,Select,Input,Table} from 'antd';
-import {reqProductList} from '../../ajax'
+import {Card,Button,Select,Input,Table, message} from 'antd';
+import {reqProductList,reqChangeProdStatus} from '../../ajax'
 import {PAGE_SIZE} from '../../config'
 import {SearchOutlined,PlusCircleOutlined} from '@ant-design/icons';
 
@@ -9,20 +9,47 @@ const {Option} = Select;
 export default class Product extends Component {
 
 	state = {
-		productList:[]
+		productList:[],
+		total:0,
+		isLoading:false
 	}
 
-	getProductList = async()=>{
-		let result = await reqProductList(1,PAGE_SIZE)
+	changeStatus = async({_id,status})=>{
+		if(status === 1) status = 2
+		else status = 1
+		let result = await reqChangeProdStatus(_id,status)
+		const {msg} = result
+		const _status = result.status
+		if(_status === 0){
+			message.success('操作成功！')
+			let arr = [...this.state.productList]
+			arr.forEach((item)=>{
+				if(item._id === _id){
+					item.status = status
+				}
+			})
+			this.setState({productList:arr})
+		}else{
+			message.error(msg)
+		}
+	}
+
+	getProductList = async(number)=>{
+		this.setState({isLoading:true})
+		let result = await reqProductList(number,PAGE_SIZE)
 		const {status,data,msg} = result
 		if(status === 0){
 			const {total,pages,list} = data
-			this.setState({productList:list})
+			console.log(total,pages);
+			this.setState({productList:list,total,isLoading:false})
+		}else{
+			message.error(msg)
+			this.setState({isLoading:false})
 		}
 	}
 
 	componentDidMount(){
-		this.getProductList()
+		this.getProductList(1)
 	}
 
 	render() {
@@ -49,14 +76,19 @@ export default class Product extends Component {
 			},
 			{
 				title: '状态',
-				dataIndex: 'status',
+				//dataIndex: 'status',
 				key: 'status',
 				align:'center',
-				render:(status)=> (
+				render:(item)=> (
 					<div>
-						<Button type={status === 1 ? 'danger' : 'primary'}>{status === 1 ? '下架' : '上架'}</Button>
+						<Button 
+							onClick={()=>{this.changeStatus(item)}}
+							type={item.status === 1 ? 'danger' : 'primary'}
+						>
+							{item.status === 1 ? '下架' : '上架'}
+						</Button>
 						<br/>
-						<span>{status === 1 ? '在售' : '售罄'}</span>
+						<span>{item.status === 1 ? '在售' : '售罄'}</span>
 					</div>
 				)
 			},
@@ -93,8 +125,12 @@ export default class Product extends Component {
 					bordered
 					dataSource={dataSource} 
 					columns={columns} 
+					rowKey="_id"
+					loading={this.state.isLoading}
 					pagination={{ //分页器
 						pageSize:PAGE_SIZE, //每页展示几条数据
+						total:this.state.total, //数据总数
+						onChange:(number)=>{this.getProductList(number)}
 					}}
 				/>
 			</Card>

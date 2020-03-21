@@ -31,7 +31,7 @@ class Category extends Component {
 	//确认按钮的回调
 	handleOk = async() => {
 		const {categoryName} = this.refs.categoryForm.getFieldsValue() //获取用户输入
-		if(!categoryName.trim()) {message.warning('分类名不能为空');return}//校验
+		if(!categoryName || !categoryName.trim()) {message.warning('分类名不能为空');return}//校验
 		let result //提前定义好一个接受服务器返回数据的变量
 		if(this.isUpdate) result = await reqUpdateCategory(this._id,categoryName)//请求修改分类
 		else result = await reqAddCategory(categoryName)//请求添加分类
