@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { Card,Button,Table, message,Modal,Form,Input} from 'antd';
+import { Card,Button,Table, message,Modal,Form,Input,Tree} from 'antd';
 import {PlusCircleOutlined} from '@ant-design/icons';
 import dayjs from 'dayjs'
 import {reqRoleList,reqAddRole} from '../../ajax'
+import treeData from '../../config/tree_config'
 
 const {Item} = Form
 
@@ -10,12 +11,20 @@ export default class Role extends Component {
 
 	state = {
 		roleList:[], //角色列表
-		visibleAdd: false //是否展示新增弹窗
+		visibleAdd: false, //是否展示新增弹窗
+		visibleAuth:false,//是否展示授权弹窗
+		checkedKeys:['home']
 	}
 
 	//展示新增弹窗
 	showAddModal = () => {
     this.setState({visibleAdd: true});
+	};
+	
+	//展示授权弹窗
+	showAuthModal = (id) => {
+		this.id = id
+    this.setState({visibleAuth: true});
   };
 
 	//新增弹窗--确认按钮的回调
@@ -29,12 +38,18 @@ export default class Role extends Component {
 			//坑！！！！！从state中获取对象类型数据的时候，最好断开引用
 			let roleList = [data,...this.state.roleList]
 			this.setState({roleList})
+			this.refs.add_form.resetFields()
 		}else{
 			message.error(msg)
 		}
     this.setState({visibleAdd: false});
-  };
-
+	};
+	
+	//授权弹窗--确认按钮的回调
+	handleAuthOk = ()=>{
+		this.setState({visibleAuth: false});
+		console.log('你点击了授权弹窗中的确认按钮,你要授权的角色id为：',this.id);
+	}
 
 	//获取角色列表
 	getRoleList = async()=>{
@@ -45,6 +60,10 @@ export default class Role extends Component {
 		}else{
 			message.error(msg)
 		}
+	}
+
+	onCheck = (checkedArr)=>{
+		this.setState({checkedKeys:checkedArr})
 	}
 
 	componentDidMount(){
@@ -79,11 +98,11 @@ export default class Role extends Component {
 			},
 			{
 				title: '操作',
-				//dataIndex: 'address',
+				dataIndex: '_id',
 				key: 'opera',
 				width:'10%',
 				align:'center',
-				render:()=><Button type="link">设置权限</Button>
+				render:(id)=><Button onClick={()=>{this.showAuthModal(id)}} type="link">设置权限</Button>
 			},
 		];
 
@@ -111,7 +130,7 @@ export default class Role extends Component {
           title="新增角色"
           visible={this.state.visibleAdd}
           onOk={this.handleAddOk}
-					onCancel={()=>{this.setState({visibleAdd: false});}}
+					onCancel={()=>{this.refs.add_form.resetFields();this.setState({visibleAdd: false});}}
 					okText='确认'
 					cancelText='取消'
         >
@@ -123,6 +142,23 @@ export default class Role extends Component {
 							<Input placeholder="请输入角色名"/>
 						</Item>
 					</Form>
+        </Modal>
+				{/* 授权弹窗 */}
+				<Modal
+          title="设置权限"
+          visible={this.state.visibleAuth}
+          onOk={this.handleAuthOk}
+					onCancel={()=>{this.setState({visibleAuth: false});}}
+					okText='确认'
+					cancelText='取消'
+        >
+					<Tree 
+						onCheck={this.onCheck}
+						checkable 
+						defaultExpandAll
+						treeData={treeData}
+						defaultCheckedKeys={['home']}
+					/>
         </Modal>
 			</div>
 		)
