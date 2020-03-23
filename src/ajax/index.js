@@ -39,3 +39,12 @@ export const reqDeletePicture = (name) => myAxios.post('/manage/img/delete',{nam
 export const reqAddProduct = (prodcuObj)=> myAxios.post('/manage/product/add',prodcuObj)
 //请求修改商品
 export const reqUpdateProduct = (prodcuObj)=>myAxios.post('/manage/product/update',prodcuObj)
+//请求所有角色列表
+export const reqRoleList = () => myAxios.get('/manage/role/list')
+//请求添加角色
+export const reqAddRole = ({roleName}) => myAxios.post('/manage/role/add',{roleName})
+
+
+
+
+
