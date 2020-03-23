@@ -33,6 +33,7 @@ export const reqChangeProdStatus = (productId,status) => myAxios.post('/manage/p
 export const reqSearchProduct = (searchType,keyWord,pageNum,pageSize) => 	myAxios.get('/manage/product/search',{params:{[searchType]:keyWord,pageNum,pageSize}})
 //根据商品id获取商品详细信息
 export const reqProductInfoById = (productId) => myAxios.get('/manage/product/info',{params:{productId}})
-//根据分类的id请求分类信息
+//请求删除一个图片
+export const reqDeletePicture = (name) => myAxios.post('/manage/img/delete',{name})
 
 
