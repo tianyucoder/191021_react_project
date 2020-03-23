@@ -1,17 +1,27 @@
 import React, { Component } from 'react'
-import {Card,Button,Form,Input,Select} from 'antd'
+import {Card,Button,Form,Input,Select,message} from 'antd'
 import {connect} from 'react-redux'
 import {ArrowLeftOutlined} from '@ant-design/icons';
+import {reqAddProduct} from '../../ajax'
 import {createSaveCategoryAsyncAction} from '../../redux/actions/category'
 import PictureWall from './picture_wall'
+import RichText from './rich_text'
 
 const {Item} = Form
 const {Option} = Select
 
 class AddUpdate extends Component {
 
-	onFinish = (values)=>{
-		console.log(values);
+	onFinish = async(values)=>{
+		values.imgs = this.refs.pictureWall.getImgNames()
+		values.detail = this.refs.richText.getRichText()
+		let {status,msg} = await reqAddProduct(values)
+		if(status === 0){
+			message.success('添加商品成功')
+			this.props.history.replace('/admin/prod_about/product')
+		}else{
+			message.error(msg)
+		}
 	}
 
 	createOption = ()=>{
@@ -84,14 +94,14 @@ class AddUpdate extends Component {
 						label="商品图片"
 						wrapperCol={{span:10}}
 					>
-						<PictureWall/>
+						<PictureWall ref="pictureWall"/>
 					</Item>
 					<Item
 						style={{marginLeft:'10px'}}
 						label="商品详情"
-						wrapperCol={{span:10}}
+						wrapperCol={{span:20}}
 					>
-						此处放置富文本组件
+						<RichText ref="richText"/>
 					</Item>
 					<Item>
 						<Button htmlType="submit" type="primary">提交</Button>

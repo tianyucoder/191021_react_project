@@ -17,7 +17,15 @@ export default class PicturesWall extends Component {
     previewVisible: false,
     previewImage: '',
     fileList: [],
-  };
+	};
+	
+	getImgNames = ()=>{
+		let result = []
+		this.state.fileList.forEach((imgObj)=>{
+			result.push(imgObj.name)
+		})
+		return result
+	}
 
   handleCancel = () => this.setState({ previewVisible: false });
 
@@ -48,7 +56,7 @@ export default class PicturesWall extends Component {
 				fileList[fileList.length-1].name = data.name
 				fileList[fileList.length-1].url = data.url
 			}
-			console.log(fileList);
+			//console.log(fileList);
 		}
 		this.setState({ fileList });
 	}
