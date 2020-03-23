@@ -42,13 +42,13 @@ class LeftNav extends Component {
 
 	//根据菜单的key计算菜单的title
 	getTitleByPath = ()=>{
-		console.log('redux中没有title了，只能靠getTitleByPath计算了');
+		//console.log('redux中没有title了，只能靠getTitleByPath计算了');
 		//根据当前浏览器中的路径的最后一个单词，去菜单数组中匹配，计算出title
 		let pathArr = this.props.location.pathname.split('/')
 		let key = pathArr.reverse()[0]
 		if(key === 'admin') key = 'home'
 		if(pathArr.indexOf('product') !== -1) key = 'product'
-		console.log(key);
+		//console.log(key);
 		let title = ''
 		menus.forEach((menuObj)=>{
 			//1.若当前的这个菜单对象有children

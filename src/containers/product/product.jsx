@@ -50,8 +50,8 @@ export default class Product extends Component {
 		//从result中获取数据
 		const {status,data,msg} = result
 		if(status === 0){
-			const {total,pages,list} = data
-			console.log(total,pages);
+			const {total,list} = data
+			//console.log(total,pages);
 			this.setState({productList:list,total,isLoading:false})
 		}else{
 			message.error(msg)

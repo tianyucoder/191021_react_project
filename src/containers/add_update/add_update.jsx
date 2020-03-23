@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {Card,Button,Form,Input,Select,message} from 'antd'
 import {connect} from 'react-redux'
 import {ArrowLeftOutlined} from '@ant-design/icons';
-import {reqAddProduct,reqProductInfoById} from '../../ajax'
+import {reqAddProduct,reqProductInfoById,reqUpdateProduct} from '../../ajax'
 import {createSaveCategoryAsyncAction} from '../../redux/actions/category'
 import PictureWall from './picture_wall'
 import RichText from './rich_text'
@@ -14,14 +14,22 @@ class AddUpdate extends Component {
 
 	state = {
 		isUpdate:false,
+		_id:''
 	}
 
 	onFinish = async(values)=>{
 		values.imgs = this.refs.pictureWall.getImgNames()
 		values.detail = this.refs.richText.getRichText()
-		let {status,msg} = await reqAddProduct(values)
+		let result 
+		if(this.state.isUpdate){
+			values._id = this.state._id
+			result = await reqUpdateProduct(values)
+		}else{
+			result = await reqAddProduct(values)
+		}
+		const {status,msg} = result
 		if(status === 0){
-			message.success('添加商品成功')
+			message.success(this.state.isUpdate ? '修改商品成功':'新增商品成功')
 			this.props.history.replace('/admin/prod_about/product')
 		}else{
 			message.error(msg)
@@ -38,7 +46,9 @@ class AddUpdate extends Component {
 		let {status,data,msg} = await reqProductInfoById(id)
 		if(status === 0){
 			console.log(data);
-			this.refs.form.setFieldsValue(data)
+			this.refs.form.setFieldsValue(data)//回显表单基本数据
+			this.refs.pictureWall.setImgs(data.imgs)//回显表单图片数据
+			this.refs.richText.setRichText(data.detail)//回显表单图片数据
 		}else{
 			message.error(msg)
 		}
@@ -51,7 +61,7 @@ class AddUpdate extends Component {
 		}
 		if(id){
 			//如果有id就是修改
-			this.setState({isUpdate:true})
+			this.setState({isUpdate:true,_id:id})
 			//根据商品的id查询商品的详细信息
 			this.getProductInfoById(id)
 		}

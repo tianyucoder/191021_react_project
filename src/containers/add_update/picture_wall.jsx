@@ -18,6 +18,15 @@ export default class PicturesWall extends Component {
     previewImage: '',
     fileList: [],
 	};
+
+	setImgs = (imgNameArr)=>{
+		console.log('@@@');
+		let result = []
+		imgNameArr.forEach((imgName,index)=>{
+			result.push({uid:-index,name:imgName,url:`/upload/${imgName}`})
+		})
+		this.setState({fileList:result})
+	}
 	
 	getImgNames = ()=>{
 		let result = []
