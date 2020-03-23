@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {Card,Button,Form,Input,Select,message} from 'antd'
 import {connect} from 'react-redux'
 import {ArrowLeftOutlined} from '@ant-design/icons';
-import {reqAddProduct} from '../../ajax'
+import {reqAddProduct,reqProductInfoById} from '../../ajax'
 import {createSaveCategoryAsyncAction} from '../../redux/actions/category'
 import PictureWall from './picture_wall'
 import RichText from './rich_text'
@@ -11,6 +11,10 @@ const {Item} = Form
 const {Option} = Select
 
 class AddUpdate extends Component {
+
+	state = {
+		isUpdate:false,
+	}
 
 	onFinish = async(values)=>{
 		values.imgs = this.refs.pictureWall.getImgNames()
@@ -30,9 +34,26 @@ class AddUpdate extends Component {
 		})
 	}
 
+	getProductInfoById = async(id)=>{
+		let {status,data,msg} = await reqProductInfoById(id)
+		if(status === 0){
+			console.log(data);
+			this.refs.form.setFieldsValue(data)
+		}else{
+			message.error(msg)
+		}
+	}
+
 	componentDidMount(){
+		const {id} = this.props.match.params
 		if(!this.props.categoryList.length){
 			this.props.saveCategoryList()
+		}
+		if(id){
+			//如果有id就是修改
+			this.setState({isUpdate:true})
+			//根据商品的id查询商品的详细信息
+			this.getProductInfoById(id)
 		}
 	}
 
@@ -43,10 +64,11 @@ class AddUpdate extends Component {
 					<Button onClick={()=>{this.props.history.goBack()}} type="link">
 						<ArrowLeftOutlined/>返回
 					</Button>	
-					<span>添加商品</span>
+					<span>{this.state.isUpdate? '修改商品' : '新增商品'}</span>
 				</div>
 			}>
 				<Form
+					ref="form"
 					onFinish={this.onFinish}
 				>
 					<Item
