@@ -16,7 +16,8 @@
 
 <script type="text/babel">
 
-  class Count extends React.Component {
+  /* class Count extends React.Component {
+
     state = {count: 0}
 
 		add = ()=>{
@@ -33,9 +34,38 @@
         </div>
       )
     }
-  }
+	} */
+	
+	function Count() {
+		//React.useState()返回一个数组，数组中的第一个元素是状态，数组中第二个元素是操作状态的方法。
+		let [count,setCount] = React.useState(0) 
+		let [name,setName] = React.useState('lisi') 
+
+		function add() {
+			//setCount(count++) //第一种写法
+			setCount((count)=> count+1 )  //第二种写法
+		}
+
+		function change() {
+			setName('peiqi')
+		}
+		
+		return (
+        <div>
+          <h2>你点击了 {count} times</h2>
+          <h2>你的名字是{name}</h2>
+          <button onClick={add}>
+            点我
+					</button>
+					<button onClick={change}>
+            点我改名
+          </button>
+        </div>
+      )
+	}
 
 	ReactDOM.render(<Count/>, document.getElementById('example1'))
+
  
 </script>
 </body>

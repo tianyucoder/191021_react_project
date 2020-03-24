@@ -17,11 +17,12 @@
   /*
   1. Component存在的问题?
       1). 父组件重新render(), 子组件也会重新执行render(), 即使没有任何变化
-      2). 当前组件setState(), 子组件重新执行render(), 即使state没有任何变化
+      2). 当前组件setState({}), 子组件也会重新执行render()
 
   2. 解决Component存在的问题
       1). 原因: 组件的shouldComponentUpdate()默认返回true, 即使数据没有变化render()都会重新执行
-      2). 办法: 使用PureComponent代替Component
+			2). 办法: 使用PureComponent代替Component
+			3). 备注：使用了PureComponent，在获取状态时，必须断开引用。
 
   3. PureComponent的基本原理
       1). 依靠shouldComponentUpdate()控制组件是否更新。
@@ -31,7 +32,8 @@
       组件的哪个生命周期勾子能实现组件优化? --- shouldComponentUpdate()
    */
 
-  class Parent extends React.Component {
+	
+	class Parent extends React.PureComponent {
 
     state = {
       cars: {name1:'奔驰'},
@@ -51,7 +53,7 @@
 					<h1>Parent组件:</h1>
 					<h3>自己的cars.name1={this.state.cars.name1}</h3>
 					<h3>自己的身价为={this.state.price}</h3>
-          <button onClick={this.test1}>test1</button>
+          <button onClick={this.test1}>点我更改车的名字</button>
           <hr/>
           <Child cars={this.state.cars}/>
         </div>
@@ -59,7 +61,7 @@
     }
   }
 
-  class Child extends React.Component {
+  class Child extends React.PureComponent {
 
     state = {
 			computers:{name1:'联想'}
@@ -67,7 +69,7 @@
 
     test2 = () => {
 			const {computers} = this.state
-			computers.name1 = '联想'
+			computers.name1 = '华硕'
       this.setState({computers})
 		}
 		
@@ -76,7 +78,7 @@
       return (
         <div>
           <h1>Child组件: </h1>
-          <button onClick={this.test2}>test2</button>
+          <button onClick={this.test2}>点我更改电脑的名字</button>
           <h3>自己的computers.name1={this.state.computers.name1}</h3>
           <h3>Parent的cars.name1={this.props.cars.name1}</h3>
         </div>

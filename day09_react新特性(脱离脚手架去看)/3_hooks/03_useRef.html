@@ -13,8 +13,25 @@
 <script type="text/javascript" src="../js/babel.min.js"></script>
 
 <script type="text/babel">
-	
 
+function Demo(params) {
+
+	let myRef = React.useRef()
+
+	function show(params) {
+		alert(myRef.current.value)
+	}
+
+	return (
+		<div>
+			<input ref={myRef} type="text"/>
+			<button onClick={show}>点我提示输入的数据</button>
+		</div>
+	)
+}
+
+ReactDOM.render(<Demo/>,document.getElementById('demo'))
+	
 </script>
 </body>
 </html>

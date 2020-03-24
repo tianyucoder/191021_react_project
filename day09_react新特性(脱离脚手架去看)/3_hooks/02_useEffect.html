@@ -15,39 +15,81 @@
 
 <script type="text/babel">
 
-class Count extends React.Component {
-	state = {count: 0}
+/* class Count extends React.Component {
 
-	add = ()=>{
-		this.setState({count:this.state.count + 1})
-	}
+    state = {count: 0}
 
-	death = ()=>{
-		ReactDOM.unmountComponentAtNode(document.getElementById('demo'))
-	}
+		add = ()=>{
+			this.setState({count:this.state.count + 1})
+		}
 
-	componentDidMount(){
-		this.timer = setInterval(() => {
-			this.setState({count:this.state.count+1})
-		},1000);
-	}
+		death = ()=>{
+			ReactDOM.unmountComponentAtNode(document.getElementById('demo'))
+		}
 
-	componentWillUnmount(){
-		clearInterval(this.timer)
-	}
+		componentDidMount(){
+			this.id = setInterval(() => {
+				this.setState({count:this.state.count+1})
+			}, 500);
+		}
 
-	render () {
+		componentWillUnmount(){
+			clearInterval(this.id)
+		}
+
+    render () {
+      return (
+        <div>
+          <h2>你点击了 {this.state.count} times</h2>
+          <button onClick={this.add}>
+            点我
+					</button>
+					<button onClick={this.death}>
+            不活了
+          </button>
+        </div>
+      )
+    }
+	} */
+
+function Count() {
+		//React.useState()返回一个数组，数组中的第一个元素是状态，数组中第二个元素是操作状态的方法。
+		let [count,setCount] = React.useState(0) 
+
+		function add() {
+			//setCount(count++) //第一种写法
+			setCount((count)=> count+1 )  //第二种写法
+		}
+
+		function death() {
+			ReactDOM.unmountComponentAtNode(document.getElementById('demo'))
+		}
+
+		React.useEffect(()=>{
+			let id = setInterval(() => {
+				setCount((count)=> count+1 ) 
+			}, 500);
+			return ()=>{
+				clearInterval(id)
+			}
+		},[])
+
+
 		return (
-			<div>
-				<h2>你点击了 {this.state.count} times</h2>
-				<button onClick={this.add}>
-					点我
-				</button>
-				<button onClick={this.death}>不活了</button>
-			</div>
-		)
+        <div>
+          <h2>你点击了 {count} times</h2>
+          <button onClick={add}>
+            点我
+					</button>
+					<button onClick={death}>
+            不活了
+          </button>
+        </div>
+      )
 	}
-}
+
+
+
 
 ReactDOM.render(<Count/>,document.getElementById('demo'))
 </script>

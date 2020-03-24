@@ -36,24 +36,24 @@
 
     //react生命周期勾子中, setState()更新状态的操作【异步】的
     componentDidMount () {
-			  //console.log('setState之前',this.state.count);
-			  //this.setState({count:1})
-			  //console.log('setState之后',this.state.count);
+			// console.log('setState之前',this.state.count); // 0
+			// this.setState({count:1})
+			// console.log('setState之后',this.state.count); // 0
     }
 
 		//react的事件监听回调中, setState()更新状态的操作【异步】的
     update1 = () => {
-			  //console.log('setState之前',this.state.count);
-			  //this.setState({count:1})
-			  //console.log('setState之后',this.state.count);
+			  // console.log('setState之前',this.state.count); // 0
+			  // this.setState({count:1})
+			  // console.log('setState之后',this.state.count); // 0
     }
 
     //定时器回调中setState()更新状态的操作【同步】的
     update2 = () => {
 			/* setTimeout(()=>{
-				console.log('setState之前',this.state.count);
-				this.setState({count:1})
-				console.log('setState之后',this.state.count);
+				console.log('setState之前',this.state.count); // 0
+				this.setState({count:1})//-------------render 1 
+				console.log('setState之后',this.state.count); // 1
 			},200) */
     }
 
@@ -61,9 +61,9 @@
     update3 = () => {
 			/* let demo = document.getElementById('demo')
 			demo.onclick = ()=>{
-				console.log('setState之前',this.state.count);
-				this.setState({count:1})
-				console.log('setState之后',this.state.count);
+				console.log('setState之前',this.state.count); // 0
+				this.setState({count:1}) // ------------ render /
+				console.log('setState之后',this.state.count);// 1
 			} */
     }
 
@@ -71,9 +71,9 @@
     update4 = () => {
 			/* Promise.resolve('ok').then(
 				()=>{
-					console.log('setState之前',this.state.count);
-					this.setState({count:1})
-					console.log('setState之后',this.state.count);
+					console.log('setState之前',this.state.count); // 0
+					this.setState({count:1}) // -------- render 1
+					console.log('setState之后',this.state.count); // 1
 				}
 			) */
     }
@@ -84,18 +84,24 @@
 
     //对象方式的setState()
     update5 = () => {
-			// console.log('setState之前',this.state.count);
-			// this.setState({count:this.state.count+1})
-			// this.setState({count:this.state.count+1})
-			// console.log('setState之后',this.state.count);
+			/* console.log('setState之前',this.state.count); // 0
+			this.setState({count:this.state.count+1}) 
+			this.setState({count:this.state.count+1}) 
+			this.setState({count:this.state.count+1}) 
+			this.setState({count:this.state.count+1}) 
+			this.setState({count:this.state.count+1}) //只有这次生效
+			console.log('setState之后',this.state.count); // 0 */
     }
 
     //函数方式的setState()
     update6 = () => {
-			/* console.log('setState之前',this.state.count);
+			console.log('setState之前',this.state.count); // 0
 			this.setState((state)=>({count:state.count+1}))
 			this.setState((state)=>({count:state.count+1}))
-			console.log('setState之后',this.state.count); */
+			this.setState((state)=>({count:state.count+1}))
+			this.setState((state)=>({count:state.count+1}))
+			this.setState((state)=>({count:state.count+1}))
+			console.log('setState之后',this.state.count); // 0
     }
 
     render() {
