@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Card,Button,Table, message,Modal,Form,Input,Tree} from 'antd';
 import {PlusCircleOutlined} from '@ant-design/icons';
 import dayjs from 'dayjs'
-import {reqRoleList,reqAddRole} from '../../ajax'
+import {reqRoleList,reqAddRole,reqAuthRole} from '../../ajax'
 import treeData from '../../config/tree_config'
 
 const {Item} = Form
@@ -13,7 +13,8 @@ export default class Role extends Component {
 		roleList:[], //角色列表
 		visibleAdd: false, //是否展示新增弹窗
 		visibleAuth:false,//是否展示授权弹窗
-		checkedKeys:['home']
+		checkedKeys:['home'],
+		id:''
 	}
 
 	//展示新增弹窗
@@ -23,8 +24,14 @@ export default class Role extends Component {
 	
 	//展示授权弹窗
 	showAuthModal = (id) => {
-		this.id = id
-    this.setState({visibleAuth: true});
+		let result = this.state.roleList.find((roleObj)=>{
+				return id === roleObj._id
+		})
+		let {menus} = result
+		if(menus.indexOf('home') === -1) menus.push('home')
+		if(result) {
+			this.setState({visibleAuth: true,id,checkedKeys:menus})
+		}
   };
 
 	//新增弹窗--确认按钮的回调
@@ -46,9 +53,16 @@ export default class Role extends Component {
 	};
 	
 	//授权弹窗--确认按钮的回调
-	handleAuthOk = ()=>{
+	handleAuthOk = async()=>{
 		this.setState({visibleAuth: false});
-		console.log('你点击了授权弹窗中的确认按钮,你要授权的角色id为：',this.id);
+		const {checkedKeys,id} = this.state
+		let {status,data,msg} = await reqAuthRole(id,checkedKeys)
+		if(status === 0){
+			message.success('授权成功')
+			this.getRoleList()
+		}else{
+			message.error(msg)
+		}
 	}
 
 	//获取角色列表
@@ -157,7 +171,7 @@ export default class Role extends Component {
 						checkable 
 						defaultExpandAll
 						treeData={treeData}
-						defaultCheckedKeys={['home']}
+						checkedKeys={this.state.checkedKeys}
 					/>
         </Modal>
 			</div>
