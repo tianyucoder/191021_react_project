@@ -1,57 +1,104 @@
 import React, { Component } from 'react'
-import { Card ,Button,Table,Modal,Form,Input,Select} from 'antd';
+import { Card ,Button,Table,Modal,Form,Input,Select, message} from 'antd';
 import {PlusCircleOutlined} from '@ant-design/icons';
+import dayjs from 'dayjs'
+import {reqUserList,reqAddUser} from '../../ajax'
 
 const {Item} = Form
 const {Option} = Select
 
 export default class User extends Component {
-	state = { visible: false };
+
+	state = { 
+		visible: false,
+		users:[],
+		roles:[]
+	};
+
+	getRoleName = (id)=>{
+		let result = this.state.roles.find((roleObj)=>{
+			return roleObj._id === id
+		})
+		if(result) return result.name
+	}
+
+	getUserList =async ()=>{
+		let {status,data,msg} = await reqUserList()
+		if(status === 0){
+			const {users,roles} = data
+			this.setState({users:users.reverse(),roles})
+		}else{
+			message.error(msg)
+		}
+	}
 
 	showModal = () => {
     this.setState({visible: true});
   };
 
-  handleOk = () => {
-    this.setState({visible: false});
+  handleOk = async() => {
+		const userObj = this.refs.form.getFieldsValue()
+		let {status,data,msg} = await reqAddUser(userObj)
+		if(status === 0){
+			message.success('添加用户成功')
+			this.getUserList()
+			this.refs.form.resetFields()
+			this.setState({visible: false});
+		}else{
+			message.error(msg)
+		}
   };
 
   handleCancel = () => {
+		this.refs.form.resetFields()
     this.setState({visible: false});
-  };
+	};
+	
+	componentDidMount(){
+		this.getUserList()
+	}
 
 	render() {
-
-		const dataSource = [
-			{
-				key: '1',
-				name: '胡彦斌',
-				age: 32,
-				address: '西湖区湖底公园1号',
-			},
-			{
-				key: '2',
-				name: '胡彦祖',
-				age: 42,
-				address: '西湖区湖底公园1号',
-			},
-		];
 		
 		const columns = [
 			{
-				title: '姓名',
-				dataIndex: 'name',
-				key: 'name',
+				title: '用户名',
+				dataIndex: 'username',
+				key: 'username',
 			},
 			{
-				title: '年龄',
-				dataIndex: 'age',
-				key: 'age',
+				title: '邮箱',
+				dataIndex: 'email',
+				key: 'email',
 			},
 			{
-				title: '住址',
-				dataIndex: 'address',
-				key: 'address',
+				title: '电话',
+				dataIndex: 'phone',
+				key: 'phone',
+			},
+			{
+				title: '注册时间',
+				dataIndex: 'create_time',
+				key: 'create_time',
+				render:(a)=>(dayjs(a).format('YYYY年 MM月 DD日 HH:mm:ss'))
+			},
+			{
+				title: '所属角色',
+				dataIndex: 'role_id',
+				key: 'role_id',
+				render:(id)=> this.getRoleName(id)
+			},
+			{
+				title: '操作',
+				//dataIndex: 'address',
+				align:'center',
+				key: 'opera',
+				render:()=> (
+					<div>
+						<Button type="link">修改</Button>
+						<Button type="link">删除</Button>
+					</div>
+				)
 			},
 		];
 
@@ -65,7 +112,12 @@ export default class User extends Component {
 						</Button>
 					</div>
 				}>
-					<Table dataSource={dataSource} columns={columns} />
+					<Table 
+						rowKey="_id" 
+						bordered
+						dataSource={this.state.users} 
+						columns={columns} 
+					/>
 				</Card>
 				{/* 新增用户弹窗 */}
 				<Modal
@@ -76,7 +128,7 @@ export default class User extends Component {
 					okText="确定"
 					cancelText="取消"
         >
-					<Form>
+					<Form ref="form">
 						<Item
 							name="username"
 							label="用户名"
@@ -137,8 +189,11 @@ export default class User extends Component {
 						>
 							<Select defaultValue="">
 								<Option value="">请选择角色</Option>
-								<Option value="1">角色1</Option>
-								<Option value="2">角色2</Option>
+								{
+									this.state.roles.map((roleObj)=>{
+										return <Option key={roleObj._id} value={roleObj._id}>{roleObj.name}</Option>
+									})
+								}
 							</Select>
 						</Item>
 					</Form>
