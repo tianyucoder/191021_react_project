@@ -45,7 +45,7 @@ class AddUpdate extends Component {
 	getProductInfoById = async(id)=>{
 		let {status,data,msg} = await reqProductInfoById(id)
 		if(status === 0){
-			console.log(data);
+			//console.log(data);
 			this.refs.form.setFieldsValue(data)//回显表单基本数据
 			this.refs.pictureWall.setImgs(data.imgs)//回显表单图片数据
 			this.refs.richText.setRichText(data.detail)//回显表单图片数据

@@ -56,7 +56,7 @@ export default class Role extends Component {
 	handleAuthOk = async()=>{
 		this.setState({visibleAuth: false});
 		const {checkedKeys,id} = this.state
-		let {status,data,msg} = await reqAuthRole(id,checkedKeys)
+		let {status,msg} = await reqAuthRole(id,checkedKeys)
 		if(status === 0){
 			message.success('授权成功')
 			this.getRoleList()

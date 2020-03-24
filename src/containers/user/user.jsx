@@ -38,7 +38,7 @@ export default class User extends Component {
 
   handleOk = async() => {
 		const userObj = this.refs.form.getFieldsValue()
-		let {status,data,msg} = await reqAddUser(userObj)
+		let {status,msg} = await reqAddUser(userObj)
 		if(status === 0){
 			message.success('添加用户成功')
 			this.getUserList()

@@ -20,7 +20,6 @@ export default class PicturesWall extends Component {
 	};
 
 	setImgs = (imgNameArr)=>{
-		console.log('@@@');
 		let result = []
 		imgNameArr.forEach((imgName,index)=>{
 			result.push({uid:-index,name:imgName,url:`/upload/${imgName}`})
