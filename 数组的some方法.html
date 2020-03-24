@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>数组的some方法</title>
+</head>
+<body>
+
+<script type="text/javascript" >
+
+	const arr = [1, 2, 3, 4, 5];
+
+	//需求：想判断arr中是否至少有一个元素大于3
+	let result = arr.some((item)=>{
+		return item>3
+	})
+	//console.log(result);
+
+	const arr2 = [
+		{name:'zhangsan',age:19},
+		{name:'lisi',age:20},
+		{name:'qiaozhi',age:20},
+		{name:'wangwu',age:21},
+		{name:'peiqi',age:22},
+	]
+	//需求：想判断arr中是否至少有一人年龄大于20岁
+	let result2 = arr2.some((personObj)=>{
+		return personObj.age > 20 && personObj.name === 'lisi'
+	})
+	console.log(result2);
+
+
+
+
+
+</script>
+	
+</body>
+</html>

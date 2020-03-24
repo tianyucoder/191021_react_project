@@ -10,32 +10,45 @@ const {SubMenu,Item} = Menu;
 
 class LeftNav extends Component {
 
+	//专门用于判断一个菜单是否应该被渲染，接收一个菜单对象作为参数，返回一个布尔值。
+	hasAuth = (menuObj)=>{
+		const {userMenus} = this.props
+		if(this.props.username === 'admin') return true
+		if(!menuObj.children){
+			return userMenus.find((item)=> item === menuObj.key)
+		}else{
+			return menuObj.children.some((item2)=> userMenus.indexOf(item2.key) !== -1)
+		}
+	}
+
 	//创建菜单的方法
 	createMenu = (menuArr)=>{
 		return menuArr.map((menuObj)=>{
-			if(!menuObj.children){
-				return (
-					<Item key={menuObj.key} onClick={()=>{this.props.saveTitle(menuObj.title)}}>
-						<Link to={menuObj.path}>
-							<menuObj.icon/>
-							<span style={{marginLeft:'10px'}}>{menuObj.title}</span>
-						</Link>
-					</Item>
-				)
-			}else{
-				return (
-					<SubMenu
-						key={menuObj.key}
-						title={
-							<span>
+			if(this.hasAuth(menuObj)){
+				if(!menuObj.children){
+					return (
+						<Item key={menuObj.key} onClick={()=>{this.props.saveTitle(menuObj.title)}}>
+							<Link to={menuObj.path}>
 								<menuObj.icon/>
-								<span>{menuObj.title}</span>
-							</span>
-						}
-					>
-						{this.createMenu(menuObj.children)}
-					</SubMenu>
-				)
+								<span style={{marginLeft:'10px'}}>{menuObj.title}</span>
+							</Link>
+						</Item>
+					)
+				}else{
+					return (
+						<SubMenu
+							key={menuObj.key}
+							title={
+								<span>
+									<menuObj.icon/>
+									<span>{menuObj.title}</span>
+								</span>
+							}
+						>
+							{this.createMenu(menuObj.children)}
+						</SubMenu>
+					)
+				}
 			}
 		})
 	}
@@ -99,7 +112,11 @@ class LeftNav extends Component {
 }
 
 export default connect(
-	(state)=>({title:state.title}),//传递状态
+	(state)=>({
+		title:state.title,
+		userMenus:state.userInfo.user.role.menus,
+		username:state.userInfo.user.username
+	}),//传递状态
 	{
 		saveTitle:createSaveTitleAction
 	}//传递操作状态的方法
